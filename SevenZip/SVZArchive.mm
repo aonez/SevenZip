@@ -285,7 +285,12 @@ static void SetError(NSError** aError, SVZArchiveError aCode, NSDictionary* user
     }
     
     if (archive->Open(inputStream, nullptr, openCallback) != S_OK) {
-        SetError(aError, kSVZArchiveErrorInvalidArchive, nil);
+		if (!(*openCallbackImpl).passwordIsDefined && (*openCallbackImpl).DidAskForPassword()) {
+			SetError(aError, kSVZArchiveErrorNeedsPassword, nil);
+		}
+		else {
+			SetError(aError, kSVZArchiveErrorInvalidArchive, nil);
+		}
         return NO;
     }
 

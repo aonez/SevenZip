@@ -21,7 +21,8 @@ typedef NS_ENUM(NSInteger, SVZArchiveError) {
     kSVZArchiveErrorFileOpenFailed = -3,
     kSVZArchiveErrorFileCreateFailed = -4,
     kSVZArchiveErrorUpdateFailed = -5,
-    kSVZArchiveErrorForeignEntry = -6
+	kSVZArchiveErrorForeignEntry = -6,
+	kSVZArchiveErrorNeedsPassword = -100
 };
 
 /// Compression level for archive update operations (higher is slower)
