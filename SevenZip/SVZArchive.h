@@ -50,10 +50,27 @@ typedef NS_ENUM(NSUInteger, SVZCompressionLevel) {
 /**
  * Class representing a 7-zip archive file.
  */
+
+/*
+/// The SVZArchive delegate
+@protocol SVZArchiveDelegate <NSObject>
+
+@optional
+
+- (void)onSVZArchiveNeedsPassword:(nonnull SVZArchiveEntry *)entry;
+
+@end
+*/
+
 @interface SVZArchive : NSObject
 
 /// The (future) URL of the file backing this archive
 @property (nonatomic, copy, readonly) NSURL* url;
+
+/*
+/// The delegate for the callbacks if set
+@property (nonatomic, assign, readonly) id delegate;
+*/
 
 /// The entries within this archive.
 @property (nonatomic, copy, readonly) SVZ_GENERIC(NSArray, SVZArchiveEntry*)* entries;
@@ -74,6 +91,7 @@ typedef NS_ENUM(NSUInteger, SVZCompressionLevel) {
  */
 + (SVZ_NULLABLE instancetype)archiveWithURL:(NSURL*)aURL
                             createIfMissing:(BOOL)aShouldCreate
+								   //delegate:(id)aDelegate
                                       error:(NSError**)aError;
 
 /**
@@ -91,6 +109,7 @@ typedef NS_ENUM(NSUInteger, SVZCompressionLevel) {
  */
 + (SVZ_NULLABLE instancetype)archiveWithURL:(NSURL*)aURL
                                    password:(NSString* SVZ_NULLABLE_PTR)aPassword
+								   //delegate:(id)aDelegate
                                       error:(NSError**)aError;
 
 /**

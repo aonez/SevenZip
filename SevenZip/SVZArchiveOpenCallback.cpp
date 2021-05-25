@@ -19,6 +19,11 @@ namespace SVZ {
     }
     
     STDMETHODIMP ArchiveOpenCallback::CryptoGetTextPassword(BSTR* aPassword) {
+		/*
+		if (delegate) {
+			printf("Delegate set in ArchiveOpenCallback::CryptoGetTextPassword");
+		}
+		*/
         _didAskForPassword = true;
         
         if (!passwordIsDefined) {

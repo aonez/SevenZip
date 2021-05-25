@@ -31,6 +31,7 @@ namespace SVZ {
     public:
         bool passwordIsDefined;
         UString password;
+        //void *delegate;
         
     public:
         ArchiveOpenCallback() : passwordIsDefined(false) {}

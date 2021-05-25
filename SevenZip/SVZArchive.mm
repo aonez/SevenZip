@@ -59,25 +59,30 @@ static void SetError(NSError** aError, SVZArchiveError aCode, NSDictionary* user
 
 + (SVZ_NULLABLE instancetype)archiveWithURL:(NSURL*)aURL
                             createIfMissing:(BOOL)aShouldCreate
+								   //delegate:(id)aDelegate
                                       error:(NSError**)aError {
     return [[self alloc] initWithURL:aURL
                             password:nil
                      createIfMissing:aShouldCreate
+							//delegate:aDelegate
                                error:aError];
 }
 
 + (SVZ_NULLABLE instancetype)archiveWithURL:(NSURL*)aURL
                                    password:(NSString*)aPassword
+								   //delegate:(id)aDelegate
                                       error:(NSError**)aError {
     return [[self alloc] initWithURL:aURL
                             password:aPassword
                      createIfMissing:NO
+							//delegate:aDelegate
                                error:aError];
 }
 
 - (SVZ_NULLABLE instancetype)initWithURL:(NSURL*)aURL
                                 password:(NSString*)aPassword
                          createIfMissing:(BOOL)aShouldCreate
+								//delegate:(id)aDelegate
                                    error:(NSError**)aError {
     NSParameterAssert(aURL);
     NSAssert([aURL isFileURL], @"url must point to a local file");
@@ -87,6 +92,7 @@ static void SetError(NSError** aError, SVZArchiveError aCode, NSDictionary* user
         _url = aURL;
         _fileManager = [[self class] fileManager];
         _entries = @[];
+		//_delegate = aDelegate;
         
         BOOL isDir = NO;
         if ([self.fileManager fileExistsAtPath:aURL.path isDirectory:&isDir]) {
@@ -276,8 +282,15 @@ static void SetError(NSError** aError, SVZArchiveError aCode, NSDictionary* user
         SetError(aError, kSVZArchiveErrorFileOpenFailed, nil);
         return NO;
     }
-    
-    SVZ::ArchiveOpenCallback* openCallbackImpl = new SVZ::ArchiveOpenCallback();
+	
+	SVZ::ArchiveOpenCallback* openCallbackImpl = new SVZ::ArchiveOpenCallback();
+	/*
+	if (self.delegate && [self.delegate respondsToSelector:@selector(onSVZArchiveNeedsPassword:)]) {
+		NSLog(@"Delegate set, onSVZArchiveNeedsPassword defined");
+		openCallbackImpl->delegate = (void*)CFBridgingRetain(self.delegate);
+	}
+    */
+	
     CMyComPtr<IArchiveOpenCallback> openCallback(openCallbackImpl);
     if (aPassword) {
         openCallbackImpl->passwordIsDefined = true;
