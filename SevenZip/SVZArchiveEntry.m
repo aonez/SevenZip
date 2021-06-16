@@ -180,13 +180,31 @@ SVZStreamBlock SVZStreamBlockCreateWithData(NSData* aData) {
                           error:(NSError**)aError {
     return [self extractToDirectoryAtURL:aDirURL
                             withPassword:nil
+                       excludingRootPath:nil
                                    error:aError];
 }
 
 - (BOOL)extractToDirectoryAtURL:(NSURL*)aDirURL
                    withPassword:(NSString*)aPassword
                           error:(NSError**)aError {
-    NSURL* entryURL = [aDirURL URLByAppendingPathComponent:self.name];
+    return [self extractToDirectoryAtURL:aDirURL
+                            withPassword:nil
+                       excludingRootPath:nil
+                                   error:aError];
+}
+
+- (BOOL)extractToDirectoryAtURL:(NSURL*)aDirURL
+                   withPassword:(NSString*)aPassword
+              excludingRootPath:(nullable NSString*)excludedRootPath
+                          error:(NSError**)aError {
+    NSString * name = self.name;
+    if (excludedRootPath) {
+        if ([name hasPrefix:excludedRootPath]) {
+            NSRange range = [name rangeOfString:excludedRootPath];
+            name = [name substringFromIndex:range.location + range.length];
+        }
+    }
+    NSURL* entryURL = [aDirURL URLByAppendingPathComponent:name];
     if (![[[self class] fileManager] createDirectoryAtURL:self.isDirectory? entryURL: entryURL.URLByDeletingLastPathComponent
                               withIntermediateDirectories:YES
                                                attributes:nil

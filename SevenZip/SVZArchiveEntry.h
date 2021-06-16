@@ -174,6 +174,21 @@ extern SVZStreamBlock SVZStreamBlockCreateWithData(NSData* aData);
                           error:(NSError**)aError;
 
 /**
+ * Extracts the archive entry data at the given URL.
+ *
+ * @param aDirURL The URL of the directory this entry should be extracted to.
+ * @param aPassword A password for when the archive is password protected. May be nil.
+ * @param excludedRootPath Exclude a part of the root path. Usefull for selected entries extraction.
+ * @param aError Error information in case of failure. May be NULL.
+ *
+ * @return YES on success, NO otherwise.
+ */
+- (BOOL)extractToDirectoryAtURL:(NSURL*)aDirURL
+                   withPassword:(NSString* SVZ_NULLABLE_PTR)aPassword
+              excludingRootPath:(nullable NSString*)excludedRootPath
+                          error:(NSError**)aError;
+
+/**
  * Extracts the archive entry data to the given stream.
  *
  * @param aOutputStream The output stream to write the data into.
